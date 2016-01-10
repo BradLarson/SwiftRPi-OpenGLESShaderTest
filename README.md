@@ -20,7 +20,11 @@ At the time I'm writing this, the Swift Package Manager isn't currently operatio
 
 in the main project directory. This should compile the `shadertest` application, which you can run.
 
-The application itself looks for two shader files in the current directory, SimpleVertexShader.vsh and SimpleFragmentShader.fsh. If it finds those, it will load them and render a screen-size quad using them. You can edit these files how you want to produce arbitrary effects. To quit the application, hit Ctrl-C.
+You can provide the shaders to use for the rendering at the command line, vertex shader first:
+
+    ./shadertest SimpleVertexShader.vsh Mandelbrot.fsh
+
+If you don't provide any shaders, the application looks for two shader files in the current directory, SimpleVertexShader.vsh and SimpleFragmentShader.fsh. If it finds those, it will load them and render a screen-size quad using them. You can edit these files how you want to produce arbitrary effects. To quit the application, hit Ctrl-C.
 
 I'd like to also recognize SAKrisT's Swift OpenGL example:
 

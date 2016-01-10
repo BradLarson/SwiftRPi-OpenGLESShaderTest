@@ -1,7 +1,7 @@
 #if os(Linux)
-import COpenGLES.gles2
+    import COpenGLES.gles2
 #else
-import OpenGL.GL3
+    import OpenGL.GL3
 #endif
 
 import Foundation
@@ -28,12 +28,12 @@ func compileShader(shaderString:String, type:ShaderType) throws -> GLuint {
         shaderCString[index] = characterValue
     }
     shaderCString[shaderString.characters.count] = 0 // Have to add a null termination
-
-    var shaderCStringPointer = UnsafePointer<GLchar>(shaderCString)	
-	
+    
+    var shaderCStringPointer = UnsafePointer<GLchar>(shaderCString)
+    
     glShaderSource(shaderHandle, 1, &shaderCStringPointer, nil)
     glCompileShader(shaderHandle)
-		
+    
     shaderCString.dealloc(shaderString.characters.count)
     
     var compileStatus:GLint = 1
@@ -43,14 +43,14 @@ func compileShader(shaderString:String, type:ShaderType) throws -> GLuint {
         glGetShaderiv(shaderHandle, GLenum(GL_INFO_LOG_LENGTH), &logLength)
         if (logLength > 0) {
             var compileLog = [CChar](count:Int(logLength), repeatedValue:0)
-
+            
             glGetShaderInfoLog(shaderHandle, logLength, &logLength, &compileLog)
-			print("Compile log: \(String.fromCString(compileLog))")
+            print("Compile log: \(String.fromCString(compileLog))")
             // let compileLogString = String(bytes:compileLog.map{UInt8($0)}, encoding:NSASCIIStringEncoding)
-
+            
             switch type {
-                case .VertexShader: throw ShaderCompileError(compileLog:"Vertex shader compile error:")
-                case .FragmentShader: throw ShaderCompileError(compileLog:"Fragment shader compile error:")
+            case .VertexShader: throw ShaderCompileError(compileLog:"Vertex shader compile error:")
+            case .FragmentShader: throw ShaderCompileError(compileLog:"Fragment shader compile error:")
             }
         }
     }
@@ -67,7 +67,7 @@ class ShaderProgram {
     
     // MARK: -
     // MARK: Initialization and teardown
-
+    
     init(vertexShader:String, fragmentShader:String) throws {
         program = glCreateProgram()
         
@@ -79,30 +79,30 @@ class ShaderProgram {
     }
     
     convenience init(vertexShaderFile:NSURL, fragmentShaderFile:NSURL) throws {
-// Note: this is a hack until Foundation's String initializers are fully functional
-//        let vertexShaderString = String(contentsOfURL:vertexShaderFile, encoding:NSASCIIStringEncoding)
-//        let fragmentShaderString = String(contentsOfURL:fragmentShaderFile, encoding:NSASCIIStringEncoding)
-	guard (NSFileManager.defaultManager().fileExistsAtPath(vertexShaderFile.path!)) else { throw ShaderCompileError(compileLog:"Vertex shader file missing")}
-	guard (NSFileManager.defaultManager().fileExistsAtPath(fragmentShaderFile.path!)) else { throw ShaderCompileError(compileLog:"Fragment shader file missing")}
+        // Note: this is a hack until Foundation's String initializers are fully functional
+        //        let vertexShaderString = String(contentsOfURL:vertexShaderFile, encoding:NSASCIIStringEncoding)
+        //        let fragmentShaderString = String(contentsOfURL:fragmentShaderFile, encoding:NSASCIIStringEncoding)
+        guard (NSFileManager.defaultManager().fileExistsAtPath(vertexShaderFile.path!)) else { throw ShaderCompileError(compileLog:"Vertex shader file missing")}
+        guard (NSFileManager.defaultManager().fileExistsAtPath(fragmentShaderFile.path!)) else { throw ShaderCompileError(compileLog:"Fragment shader file missing")}
         let vertexShaderString = try NSString(contentsOfFile:vertexShaderFile.path!, encoding:NSASCIIStringEncoding)
         let fragmentShaderString = try NSString(contentsOfFile:fragmentShaderFile.path!, encoding:NSASCIIStringEncoding)
- 
+        
         try self.init(vertexShader:String(vertexShaderString), fragmentShader:String(fragmentShaderString))
     }
-	
+    
     deinit {
-		if (vertexShader != nil) {
-	        glDeleteShader(vertexShader)
-		}
-		if (fragmentShader != nil) {
-	        glDeleteShader(fragmentShader)
-		}
+        if (vertexShader != nil) {
+            glDeleteShader(vertexShader)
+        }
+        if (fragmentShader != nil) {
+            glDeleteShader(fragmentShader)
+        }
         glDeleteProgram(program)
     }
     
     // MARK: -
     // MARK: Attributes and uniforms
-
+    
     func addAttribute(attribute:String) {
         if (!attributes.contains(attribute)) {
             attributes.append(attribute)
@@ -131,12 +131,12 @@ class ShaderProgram {
             glGetProgramiv(program, GLenum(GL_INFO_LOG_LENGTH), &logLength)
             if (logLength > 0) {
                 var compileLog = [CChar](count:Int(logLength), repeatedValue:0)
-
+                
                 glGetProgramInfoLog(program, logLength, &logLength, &compileLog)
-			print("Link log: \(String.fromCString(compileLog))")
-         }
-
-
+                print("Link log: \(String.fromCString(compileLog))")
+            }
+            
+            
             throw ShaderCompileError(compileLog:"Link error")
         }
         initialized = true
