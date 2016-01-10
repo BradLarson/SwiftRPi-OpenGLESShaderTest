@@ -1,0 +1,7 @@
+module CVideoCore [system] { 
+    header "/usr/include/bcm_host.h"
+    header "/usr/include/EGL/egl.h"
+    link "bcm_host"
+    link "EGL"
+    export *
+}
