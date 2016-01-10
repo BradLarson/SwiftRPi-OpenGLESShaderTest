@@ -1,1 +1,1 @@
-swiftc -o shadertest -I /usr/include/interface/vcos/pthreads/ -I /usr/include/interface/vmcs_host/linux/ -I ./Packages/COpenGLES -I ./Packages/CVideoCore ./Sources/main.swift ./Sources/ShaderProgram.swift ./Sources/ConvertedShaders.swift
+swiftc -o shadertest -I /usr/include/interface/vcos/pthreads/ -I /usr/include/interface/vmcs_host/linux/ -I ./Packages/COpenGLES -I ./Packages/CVideoCore ./Sources/main.swift ./Sources/ShaderProgram.swift
